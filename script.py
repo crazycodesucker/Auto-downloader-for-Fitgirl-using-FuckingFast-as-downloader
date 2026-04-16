@@ -36,7 +36,7 @@ if not spoiler_div:
     print("Spoiler content not found")
     exit()
 
-# extract links directly into list
+# extract links
 URLS = []
 for a in spoiler_div.find_all("a", href=True):
     href = a["href"]
@@ -81,7 +81,14 @@ for url in URLS:
     filename = get_filename_from_url(url)
 
     if not filename:
-        print(f"Skipping: {url}")
+        print(f"Skipping (no filename): {url}")
+        continue
+
+    filepath = os.path.join(DOWNLOAD_DIR, filename)
+
+    # 🔥 NEW: skip if already exists
+    if os.path.exists(filepath):
+        print(f"Already exists, skipping: {filename}")
         continue
 
     print(f"Downloading: {filename}")
